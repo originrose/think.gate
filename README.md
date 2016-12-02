@@ -12,7 +12,7 @@ In your app's **project.clj**:
 
 ;; add
 :cljsbuild {:builds
-	    [{:id "dev"
+            [{:id "dev"
               :figwheel true
               :source-paths ["src/cljs"]
               :compiler {:main "your.cljs.ns"
@@ -74,7 +74,7 @@ In your app's **clojurescript** (i.e., under `src/cljs/your/cljs/ns.cljs`):
 
 ---
 
-Then: http://localhost:8090
+Then: [http://localhost:8090](http://localhost:8090)
 
 ## License
 
