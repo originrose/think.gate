@@ -1,4 +1,4 @@
-(defproject thinktopic/gate "0.1.0-SNAPSHOT"
+(defproject thinktopic/gate "0.1.0"
   :description "A library for hacking wepages into your clojure app."
 
   :dependencies [[org.clojure/clojure "1.8.0"]
