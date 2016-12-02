@@ -12,13 +12,13 @@ In your app's **project.clj**:
 
 ;; add
 :cljsbuild {:builds
-	     [{:id "dev"
-                :figwheel true
-                :source-paths ["src/cljs"]
-                :compiler {:main "your.cljs.ns"
-                           :asset-path "out"
-                           :output-to "resources/public/js/app.js"
-                           :output-dir "resources/public/out"}}]}
+	    [{:id "dev"
+              :figwheel true
+              :source-paths ["src/cljs"]
+              :compiler {:main "your.cljs.ns"
+                         :asset-path "out"
+                         :output-to "resources/public/js/app.js"
+                         :output-dir "resources/public/out"}}]}
 
 ```
 
@@ -71,6 +71,10 @@ In your app's **clojurescript** (i.e., under `src/cljs/your/cljs/ns.cljs`):
 
 (think.gate.core/set-component [interactive-component])
 ```
+
+---
+
+Then: http://localhost:8090
 
 ## License
 
