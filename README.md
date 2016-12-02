@@ -4,7 +4,7 @@ Gate is an opinitated library for hacking wepages into your clojure app.
 
 ## Usage
 
-In your app's project.clj:
+In your app's **project.clj**:
 
 ```
 ;; depend on
@@ -24,7 +24,7 @@ In your app's project.clj:
 
 ---
 
-In your app's clojure:
+In your app's **clojure**:
 
 ```
 [think.gate.core :as gate]
@@ -42,9 +42,11 @@ In your app's clojure:
   []
   (gate/open #'routing-map))
 
+```
+
 ---
 
-In your app's clojurescript (i.e., under `src/cljs/your/cljs/ns.cljs`):
+In your app's **clojurescript** (i.e., under `src/cljs/your/cljs/ns.cljs`):
 
 ```
 (ns your.cljs.ns
