@@ -9,6 +9,8 @@
                  [reagent "0.6.0"]
                  [cljs-ajax "0.5.8"]]
 
+  :plugins [[s3-wagon-private "1.2.0"]]
+
   :repl-options {:init-ns think.gate.core}
 
   :source-paths ["src/clj" "src/cljs"]
