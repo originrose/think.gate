@@ -9,3 +9,7 @@ pom.xml.asc
 /.nrepl-port
 .hgignore
 .hg/
+examples/simple/figwheel_server.log
+examples/simple/.nrepl-port
+examples/simple/target/
+examples/simple/resources/

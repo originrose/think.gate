@@ -4,8 +4,10 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [http-kit "2.2.0"]
                  [hiccup "1.0.5"]
+                 [ns-tracker "0.3.1"]
                  [figwheel-sidecar "0.5.8"]
                  [ring-middleware-format "0.7.0"]
+                 [garden "1.3.2"]
                  [reagent "0.6.0"]
                  [cljs-ajax "0.5.8"]]
 
