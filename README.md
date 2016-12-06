@@ -74,7 +74,7 @@ In your app's **clojurescript** (i.e., under `src/cljs/your/cljs/ns.cljs`):
 
 ---
 
-For **CSS**, create `src/clj/css/styles.clj`:
+For **css**, create `src/clj/css/styles.clj`:
 
 ```
 (ns css.styles

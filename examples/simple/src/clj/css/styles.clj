@@ -2,4 +2,4 @@
   (:require [garden.units :refer [px]]))
 
 (def styles
-  [:body {:background :green}])
+  [:body {:background :#aaf}])

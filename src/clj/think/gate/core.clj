@@ -40,10 +40,10 @@
     (spit css-file-path (garden/css @(resolve 'css.styles/styles)))))
 
 (defn start-css!
-  [path]
+  []
   (let [stop-chan (chan)
         done?* (atom false)
-        modified-namespaces (ns-tracker [path])]
+        modified-namespaces (ns-tracker ["src/clj/css"])]
     (thread (while (not @done?*)
               (let [timeout-chan (timeout 250)
                     [_ c] (alts!! [timeout-chan stop-chan])]
@@ -54,7 +54,7 @@
     #(>!! stop-chan "stop")))
 
 (defn open
-  [routing-map & {:keys [css-path]}]
+  [routing-map]
   (close)
   (start-figwheel!)
   (let [stop-server (-> (fn [req]
@@ -68,9 +68,10 @@
                         (wrap-resource "public")
                         (wrap-restful-format)
                         (server/run-server))
-        stop-css! (if css-path (start-css! css-path))]
+
+        stop-css! (start-css!)]
     (reset! gate* (fn []
-                    (if stop-css! (stop-css!))
+                    (stop-css!)
                     (stop-figwheel!)
                     (stop-server)
                     :all-stopped)))

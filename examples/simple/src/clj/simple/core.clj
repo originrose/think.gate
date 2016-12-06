@@ -11,7 +11,7 @@
 
 (defn gate
   []
-  (gate/open #'routing-map :css-path "src/clj/css"))
+  (gate/open #'routing-map))
 
 (defn -main
   "I don't do a whole lot ... yet."
