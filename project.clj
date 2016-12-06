@@ -7,7 +7,8 @@
                  [figwheel-sidecar "0.5.8"]
                  [ring-middleware-format "0.7.0"]
                  [reagent "0.6.0"]
-                 [cljs-ajax "0.5.8"]]
+                 [cljs-ajax "0.5.8"]
+                 [net.mikera/imagez "0.12.0"]]
 
   :plugins [[s3-wagon-private "1.2.0"]]
 

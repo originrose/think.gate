@@ -1,6 +1,6 @@
 # thinktopic/gate
 
-Gate is an opinitated library for hacking wepages into your clojure app.
+Gate is an opinionated library for hacking wepages into your clojure app.
 
 ## Usage
 
