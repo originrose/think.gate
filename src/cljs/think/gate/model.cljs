@@ -5,11 +5,9 @@
 
 (enable-console-print!)
 
-
 (defn put
   ([method params]
-   (let [c (chan)
-         addr (str "/" method)]
+   (let [c (chan)]
      (PUT (str "/" method) {:params params
                             :handler #(go (>! c %))})
      c))

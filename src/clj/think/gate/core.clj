@@ -1,15 +1,14 @@
 (ns think.gate.core
   (:require [clojure.core.async :refer [thread chan alts!! timeout >!!]]
             [clojure.java.io :as io]
+            [clojure.string :as string]
             [org.httpkit.server :as server]
             [ring.middleware.format :refer [wrap-restful-format]]
             [ring.middleware.resource :refer [wrap-resource]]
             [hiccup.page :as hiccup]
             [figwheel-sidecar.repl-api :refer [start-figwheel! stop-figwheel!]]
-            [clojure.string :as string]
-            [garden.core :as garden]
-            [figwheel-sidecar.repl-api :refer [start-figwheel! stop-figwheel!]]
             [ns-tracker.core :refer [ns-tracker]]
+            [garden.core :as garden]
             [mikera.image.core :as imagez])
   (:import [java.awt.image BufferedImage]
            [java.io ByteArrayOutputStream ByteArrayInputStream]))
@@ -26,13 +25,11 @@
     [:div#app "Loading think.gate..."]
     [:script {:type "text/javascript" :src "js/app.js"}]]))
 
-
 (defn image->input-stream
   [^BufferedImage img]
   (let [data-stream (ByteArrayOutputStream.)]
     (imagez/write img data-stream "PNG")
     (ByteArrayInputStream. (.toByteArray data-stream))))
-
 
 (defn- ok
   [body]
@@ -53,31 +50,24 @@
 (defn parse-query-string
   [query-string]
   (when query-string
-    (let [parts (string/split query-string #"&")]
-      (->> parts
-           (map (fn [query-part]
-                  (let [[k v] (string/split query-part #"=")]
-                    [(keyword k) v])))
-           (into {})))))
-
+    (->> (string/split query-string #"&")
+         (map (fn [query-part]
+                (let [[k v] (string/split query-part #"=")]
+                  [(keyword k) v])))
+         (into {}))))
 
 (defn main-handler
   [routing-map req]
-  (try
-   (cond
-     (and (= (:uri req) "/")
-          (empty? (:params req))) (ok (hiccup/html5 (base-page)))
-     :else
-     (if-let [handler (get @routing-map (.substring (get req :uri) 1))]
-       (ok (handler (merge (get req :params)
-                           (parse-query-string (get req :query-string)))))
-       {:status 404}))
-   (catch Throwable e
-     (clojure.pprint/pprint e)
-     e)))
+  (cond
+    (and (= (:uri req) "/")
+         (empty? (:params req))) (ok (hiccup/html5 (base-page)))
+    :else
+    (if-let [handler (get @routing-map (.substring (get req :uri) 1))]
+      (ok (handler (merge (get req :params)
+                          (parse-query-string (get req :query-string)))))
+      {:status 404})))
 
-
-(defn handler-stack
+(defn wrap-report-errors
   [handler]
   (fn [req]
    (try
@@ -86,14 +76,12 @@
        (clojure.pprint/pprint e)
        (throw e)))))
 
-
 (defn css-update!
   []
   (require 'css.styles :reload)
   (let [css-file-path "resources/public/css/app.css"]
     (io/make-parents css-file-path)
     (spit css-file-path (garden/css @(resolve 'css.styles/styles)))))
-
 
 (defn start-css!
   []
@@ -110,17 +98,15 @@
                   (reset! done?* true)))))
     #(>!! stop-chan "stop")))
 
-
 (defn open
   [routing-map & {:keys [port]
                   :or {port 8090}}]
   (close)
   (start-figwheel!)
-  (let [stop-server (-> (fn [req]
-                          (main-handler routing-map req))
+  (let [stop-server (-> #(main-handler routing-map %)
                         (wrap-resource "public")
                         (wrap-restful-format)
-                        handler-stack
+                        (wrap-report-errors)
                         (server/run-server {:port port}))
         stop-css! (start-css!)]
     (reset! gate* (fn []
