@@ -74,6 +74,24 @@ In your app's **clojurescript** (i.e., under `src/cljs/your/cljs/ns.cljs`):
 
 ---
 
+For **css**, create `src/clj/css/styles.clj`:
+
+```
+(ns css.styles
+  (:require [garden.units :refer [px]]))
+
+(def styles
+  [:body {:background :green}])
+```
+
+And add to your **project.clj**:
+
+```
+:source-paths ["src/clj"]
+
+:figwheel {:css-dirs ["resources/public/css"]}
+```
+
 Then: [http://localhost:8090](http://localhost:8090)
 
 ## License
