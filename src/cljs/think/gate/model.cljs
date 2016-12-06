@@ -3,12 +3,13 @@
   (:require [cljs.core.async :as async :refer [>! chan]]
             [ajax.core :refer [PUT]]))
 
+(enable-console-print!)
+
 (defn put
   ([method params]
    (let [c (chan)]
-     (PUT "/" {:params (merge {:method method}
-                              params)
-               :handler #(go (>! c %))})
+     (PUT (str "/" method) {:params params
+                            :handler #(go (>! c %))})
      c))
   ([method]
    (put method {})))
