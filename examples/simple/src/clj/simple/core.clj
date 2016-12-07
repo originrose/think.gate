@@ -20,4 +20,4 @@
 
 (defn -main
   [& args]
-  (println (other-thing)))
+  (println (gate)))
