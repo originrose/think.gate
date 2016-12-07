@@ -86,14 +86,14 @@
         (throw e)))))
 
 (defn css-update!
-  [css-output-path]
+  []
   (require 'css.styles :reload)
-  (let [css-file-path css-output-path]
+  (let [css-file-path "resources/public/css/app.css"]
     (io/make-parents css-file-path)
     (spit css-file-path (garden/css @(resolve 'css.styles/styles)))))
 
 (defn start-css!
-  [css-input-path css-output-path]
+  [css-input-path]
   (if (.exists (io/file css-input-path))
     (let [stop-chan (chan)
           done?* (atom false)
@@ -107,14 +107,13 @@
                       (css-update!))
                     (reset! done?* true)))))
       #(>!! stop-chan "stop"))
-    (println "No css detected.  If you would like css please add a namespace 'css.styles with a global var named styles")))
+    (println "No css detected. If you would like css please add a namespace `css.styles` with a var named `styles`.")))
 
 (defn open
-  [routing-map & {:keys [port variable-map css-clj-path css-output-path]
+  [routing-map & {:keys [port variable-map clj-css-path]
                   :or {port 8090
                        variable-map {:render-page "default"}
-                       css-clj-path "src/clj/css"
-                       css-output-path "resources/public/css/app.css"}}]
+                       clj-css-path "src/clj/css"}}]
   (close)
   (start-figwheel!)
   (let [stop-server (-> (fn [request]
@@ -123,7 +122,7 @@
                         (wrap-restful-format)
                         (wrap-report-errors)
                         (server/run-server {:port port}))
-        stop-css! (start-css! css-clj-path css-output-path)]
+        stop-css! (start-css! clj-css-path)]
     (reset! gate* (fn []
                     (when stop-css!
                       (stop-css!))
