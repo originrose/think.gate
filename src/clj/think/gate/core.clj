@@ -123,11 +123,11 @@
                         (wrap-restful-format)
                         (wrap-report-errors)
                         (server/run-server {:port port}))
-        stop-css! (start-css!)]
+        stop-css! (start-css! css-clj-path css-output-path)]
     (reset! gate* (fn []
                     (when stop-css!
                       (stop-css!))
                     (stop-figwheel!)
                     (stop-server)
                     :all-stopped)))
-  "Gate opened on http://localhost:8090")
+  (format "Gate opened on http://localhost:%s" port))
