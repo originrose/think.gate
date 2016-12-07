@@ -16,13 +16,22 @@
 
 (defonce gate* (atom nil))
 
+(defn- variable-map->string
+  [variable-map]
+  (string/join ";" (map (fn [[k v]]
+                          (let [var-name (.replace ^String (name k) "-" "_")]
+                            (str var-name "=\"" v "\"")))
+                        variable-map)))
+
 (defn base-page
-  []
+  [variable-map]
   (list
    [:head
-    [:link {:type "text/css" :href "css/app.css" :rel "stylesheet"}]]
+    [:link {:type "text/css" :href "css/app.css" :rel "stylesheet"}]
+    (when-not (empty? variable-map)
+      [:script {:type "text/javascript"} (variable-map->string variable-map)])]
    [:body
-    [:div#app "Loading think.gate..."]
+    [:div#app "Loading think.gate...make sure your main cljs namespace calls think.gate.core/start-frontend"]
     [:script {:type "text/javascript" :src "js/app.js"}]]))
 
 (defn image->input-stream
@@ -57,10 +66,10 @@
          (into {}))))
 
 (defn main-handler
-  [routing-map req]
+  [routing-map req render-arg]
   (cond
     (and (= (:uri req) "/")
-         (empty? (:params req))) (ok (hiccup/html5 (base-page)))
+         (empty? (:params req))) (ok (hiccup/html5 (base-page render-arg)))
     :else
     (if-let [handler (get @routing-map (.substring (get req :uri) 1))]
       (ok (handler (merge (get req :params)
@@ -99,11 +108,12 @@
     #(>!! stop-chan "stop")))
 
 (defn open
-  [routing-map & {:keys [port]
-                  :or {port 8090}}]
+  [routing-map & {:keys [port variable-map]
+                  :or {port 8090
+                       variable-map {:render-page "default"}}}]
   (close)
   (start-figwheel!)
-  (let [stop-server (-> #(main-handler routing-map %)
+  (let [stop-server (-> #(main-handler routing-map % variable-map)
                         (wrap-resource "public")
                         (wrap-restful-format)
                         (wrap-report-errors)

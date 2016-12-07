@@ -9,13 +9,20 @@
 
 (def state* (atom nil))
 
-(defn interactive-component
-  []
-  (fn []
-    (if-let [n @state*]
-      [:div "Server's answer: " n]
-      [:button {:on-click #(go (reset! state* (<! (model/put "foo" {:a 1})))
-                               (println @state*))}
-       "GO"])))
+(defmethod gate/component "default"
+  [& args]
+  (fn [& args]
+   (if-let [n @state*]
+     [:div "Server's answer: " n]
+     [:button {:on-click #(go (reset! state* (<! (model/put "foo" {:a 1})))
+                              (println @state*))}
+      "GO"])))
 
-(think.gate.core/set-component [interactive-component])
+
+(defmethod gate/component "otherthing"
+  [& args]
+  (fn [& args]
+   [:div "HAHAHAHAHAHAHAH"]))
+
+
+(gate/start-frontend)

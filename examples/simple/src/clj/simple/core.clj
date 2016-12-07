@@ -13,6 +13,11 @@
   []
   (gate/open #'routing-map))
 
+
+(defn labeller
+  []
+  (gate/open #'routing-map :variable-map {:render-page "otherthing"}))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
