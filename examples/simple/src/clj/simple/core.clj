@@ -13,7 +13,11 @@
   []
   (gate/open #'routing-map))
 
+(defn other-thing
+  "Example of rendering a different component with the gate/component multimethod."
+  []
+  (gate/open #'routing-map :variable-map {:render-page "otherthing"}))
+
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
-  (println (gate)))
+  (println (other-thing)))
