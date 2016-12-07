@@ -93,24 +93,27 @@
     (spit css-file-path (garden/css @(resolve 'css.styles/styles)))))
 
 (defn start-css!
-  []
-  (let [stop-chan (chan)
-        done?* (atom false)
-        modified-namespaces (ns-tracker ["src/clj/css"])]
-    (css-update!)
-    (thread (while (not @done?*)
-              (let [timeout-chan (timeout 250)
-                    [_ c] (alts!! [timeout-chan stop-chan])]
-                (if (= c timeout-chan)
-                  (if (some #{'css.styles} (modified-namespaces))
-                    (css-update!))
-                  (reset! done?* true)))))
-    #(>!! stop-chan "stop")))
+  [css-input-path]
+  (if (.exists (io/file css-input-path))
+    (let [stop-chan (chan)
+          done?* (atom false)
+          modified-namespaces (ns-tracker [css-input-path])]
+      (css-update!)
+      (thread (while (not @done?*)
+                (let [timeout-chan (timeout 250)
+                      [_ c] (alts!! [timeout-chan stop-chan])]
+                  (if (= c timeout-chan)
+                    (if (some #{'css.styles} (modified-namespaces))
+                      (css-update!))
+                    (reset! done?* true)))))
+      #(>!! stop-chan "stop"))
+    (println "No css detected. If you would like css please add a namespace `css.styles` with a var named `styles`.")))
 
 (defn open
-  [routing-map & {:keys [port variable-map]
+  [routing-map & {:keys [port variable-map clj-css-path]
                   :or {port 8090
-                       variable-map {:render-page "default"}}}]
+                       variable-map {:render-page "default"}
+                       clj-css-path "src/clj/css"}}]
   (close)
   (start-figwheel!)
   (let [stop-server (-> (fn [request]
@@ -119,10 +122,11 @@
                         (wrap-restful-format)
                         (wrap-report-errors)
                         (server/run-server {:port port}))
-        stop-css! (start-css!)]
+        stop-css! (start-css! clj-css-path)]
     (reset! gate* (fn []
-                    (stop-css!)
+                    (when stop-css!
+                      (stop-css!))
                     (stop-figwheel!)
                     (stop-server)
                     :all-stopped)))
-  "Gate opened on http://localhost:8090")
+  (format "Gate opened on http://localhost:%s" port))
