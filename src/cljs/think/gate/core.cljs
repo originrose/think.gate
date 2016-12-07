@@ -4,23 +4,20 @@
 (enable-console-print!)
 
 (def started* (atom false))
-(def frontend* (atom [:div "Welcome to think.gate... Did you call think.gate.core/start-frontend your main cljs namespace?"]))
+(def frontend* (atom [:div "Welcome to think.gate..."]))
 
 
-(defmulti component (fn [& args]
-                        (first args)))
-
+(defmulti component (fn [& args] (first args)))
 
 (defmethod component :default
   [& args]
   (fn [& args]
-    [:div (str "Welcome to think.gate... Unrecognized render args " args)]))
+    [:div (str "Welcome to think.gate... Unrecognized render args: " args)]))
 
 
 (defn current-page
   []
   [:div.page-wrapper @frontend*])
-
 
 (defn- set-frontend
   [frontend]
@@ -30,7 +27,6 @@
     (reagent/render
      [current-page]
      (.getElementById js/document "app"))))
-
 
 (defn start-frontend
   []

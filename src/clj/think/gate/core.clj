@@ -18,10 +18,10 @@
 
 (defn- variable-map->string
   [variable-map]
-  (string/join ";" (map (fn [[k v]]
-                          (let [var-name (.replace ^String (name k) "-" "_")]
-                            (str var-name "=\"" v "\"")))
-                        variable-map)))
+  (->> variable-map
+       (map (fn [[k v]]
+              (format "%s=\"%s\"" (.replace (name k) "-" "_") v)))
+       (string/join ";\n")))
 
 (defn base-page
   [variable-map]
@@ -31,7 +31,7 @@
     (when-not (empty? variable-map)
       [:script {:type "text/javascript"} (variable-map->string variable-map)])]
    [:body
-    [:div#app "Loading think.gate...make sure your main cljs namespace calls think.gate.core/start-frontend"]
+    [:div#app "Loading think.gate... Does your cljs namespace call think.gate.core/start-frontend?"]
     [:script {:type "text/javascript" :src "js/app.js"}]]))
 
 (defn image->input-stream
@@ -66,10 +66,10 @@
          (into {}))))
 
 (defn main-handler
-  [routing-map req render-arg]
+  [req routing-map variable-map]
   (cond
     (and (= (:uri req) "/")
-         (empty? (:params req))) (ok (hiccup/html5 (base-page render-arg)))
+         (empty? (:params req))) (ok (hiccup/html5 (base-page variable-map)))
     :else
     (if-let [handler (get @routing-map (.substring (get req :uri) 1))]
       (ok (handler (merge (get req :params)
@@ -79,11 +79,11 @@
 (defn wrap-report-errors
   [handler]
   (fn [req]
-   (try
-     (handler req)
-     (catch Throwable e
-       (clojure.pprint/pprint e)
-       (throw e)))))
+    (try
+      (handler req)
+      (catch Throwable e
+        (clojure.pprint/pprint e)
+        (throw e)))))
 
 (defn css-update!
   []
@@ -113,7 +113,8 @@
                        variable-map {:render-page "default"}}}]
   (close)
   (start-figwheel!)
-  (let [stop-server (-> #(main-handler routing-map % variable-map)
+  (let [stop-server (-> (fn [request]
+                          (main-handler request routing-map variable-map))
                         (wrap-resource "public")
                         (wrap-restful-format)
                         (wrap-report-errors)

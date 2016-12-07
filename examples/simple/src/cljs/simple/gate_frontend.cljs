@@ -12,17 +12,15 @@
 (defmethod gate/component "default"
   [& args]
   (fn [& args]
-   (if-let [n @state*]
-     [:div "Server's answer: " n]
-     [:button {:on-click #(go (reset! state* (<! (model/put "foo" {:a 1})))
-                              (println @state*))}
-      "GO"])))
-
+    (if-let [n @state*]
+      [:div "Server's answer: " n]
+      [:button {:on-click #(go (reset! state* (<! (model/put "foo" {:a 1})))
+                               (println @state*))}
+       "GO"])))
 
 (defmethod gate/component "otherthing"
   [& args]
   (fn [& args]
-   [:div "HAHAHAHAHAHAHAH"]))
-
+    [:div "Some other thing!"]))
 
 (gate/start-frontend)
