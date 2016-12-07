@@ -86,31 +86,35 @@
         (throw e)))))
 
 (defn css-update!
-  []
+  [css-output-path]
   (require 'css.styles :reload)
-  (let [css-file-path "resources/public/css/app.css"]
+  (let [css-file-path css-output-path]
     (io/make-parents css-file-path)
     (spit css-file-path (garden/css @(resolve 'css.styles/styles)))))
 
 (defn start-css!
-  []
-  (let [stop-chan (chan)
-        done?* (atom false)
-        modified-namespaces (ns-tracker ["src/clj/css"])]
-    (css-update!)
-    (thread (while (not @done?*)
-              (let [timeout-chan (timeout 250)
-                    [_ c] (alts!! [timeout-chan stop-chan])]
-                (if (= c timeout-chan)
-                  (if (some #{'css.styles} (modified-namespaces))
-                    (css-update!))
-                  (reset! done?* true)))))
-    #(>!! stop-chan "stop")))
+  [css-input-path css-output-path]
+  (if (.exists (io/file css-input-path))
+    (let [stop-chan (chan)
+          done?* (atom false)
+          modified-namespaces (ns-tracker [css-input-path])]
+      (css-update!)
+      (thread (while (not @done?*)
+                (let [timeout-chan (timeout 250)
+                      [_ c] (alts!! [timeout-chan stop-chan])]
+                  (if (= c timeout-chan)
+                    (if (some #{'css.styles} (modified-namespaces))
+                      (css-update!))
+                    (reset! done?* true)))))
+      #(>!! stop-chan "stop"))
+    (println "No css detected.  If you would like css please add a namespace 'css.styles with a global var named styles")))
 
 (defn open
-  [routing-map & {:keys [port variable-map]
+  [routing-map & {:keys [port variable-map css-clj-path css-output-path]
                   :or {port 8090
-                       variable-map {:render-page "default"}}}]
+                       variable-map {:render-page "default"}
+                       css-clj-path "src/clj/css"
+                       css-output-path "resources/public/css/app.css"}}]
   (close)
   (start-figwheel!)
   (let [stop-server (-> (fn [request]
@@ -121,7 +125,8 @@
                         (server/run-server {:port port}))
         stop-css! (start-css!)]
     (reset! gate* (fn []
-                    (stop-css!)
+                    (when stop-css!
+                      (stop-css!))
                     (stop-figwheel!)
                     (stop-server)
                     :all-stopped)))
