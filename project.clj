@@ -12,8 +12,6 @@
                  [cljs-ajax "0.5.8"]
                  [net.mikera/imagez "0.12.0"]]
 
-  :plugins [[s3-wagon-private "1.2.0"]]
-
   :repl-options {:init-ns think.gate.core}
 
   :source-paths ["src/clj" "src/cljs"]
@@ -40,15 +38,4 @@
                   ["deploy"]
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
-                  ["vcs" "push"]]
-
-  :repositories  {"snapshots"  {:url "s3p://thinktopic.jars/snapshots/"
-                                :passphrase :env
-                                :username :env
-                                :releases false
-                                :sign-releases false}
-                  "releases"  {:url "s3p://thinktopic.jars/releases/"
-                               :passphrase :env
-                               :username :env
-                               :snapshots false
-                               :sign-releases false}})
+                  ["vcs" "push"]])
