@@ -90,7 +90,7 @@
   (require 'css.styles :reload)
   (let [css-file-path "resources/public/css/app.css"]
     (io/make-parents css-file-path)
-    (spit css-file-path (garden/css @(resolve 'css.styles/styles)))))
+    (spit css-file-path (apply garden/css @(resolve 'css.styles/styles)))))
 
 (defn start-css!
   [css-input-path]
