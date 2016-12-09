@@ -109,24 +109,33 @@
       #(>!! stop-chan "stop"))
     (println "No css detected. If you would like css please add a namespace `css.styles` with a var named `styles`.")))
 
+
 (defn open
-  [routing-map & {:keys [port variable-map clj-css-path]
+  "Open up the gate server.  It will serve up data from resources/public.
+A set of static global variables accessed through (aget js/window varname)
+is passed in through variable map, all values are encoded as strings.
+There is a choice of where the system looks for css for the live updating"
+  [routing-map & {:keys [port variable-map clj-css-path live-updates?]
                   :or {port 8090
                        variable-map {:render-page "default"}
-                       clj-css-path "src/clj/css"}}]
+                       clj-css-path "src/clj/css"
+                       live-updates? true}}]
   (close)
-  (start-figwheel!)
+  (when live-updates?
+    (start-figwheel!))
   (let [stop-server (-> (fn [request]
                           (main-handler request routing-map variable-map))
                         (wrap-resource "public")
                         (wrap-restful-format)
                         (wrap-report-errors)
                         (server/run-server {:port port}))
-        stop-css! (start-css! clj-css-path)]
+        stop-css! (when live-updates?
+                    (start-css! clj-css-path))]
     (reset! gate* (fn []
                     (when stop-css!
                       (stop-css!))
-                    (stop-figwheel!)
+                    (when live-updates?
+                      (stop-figwheel!))
                     (stop-server)
                     :all-stopped)))
   (format "Gate opened on http://localhost:%s" port))
