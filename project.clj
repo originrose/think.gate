@@ -1,4 +1,4 @@
-(defproject thinktopic/gate "0.1.1-SNAPSHOT"
+(defproject thinktopic/think.gate "0.1.1-SNAPSHOT"
   :description "A library for hacking wepages into your clojure app."
 
   :dependencies [[org.clojure/clojure "1.8.0"]
@@ -11,8 +11,6 @@
                  [reagent "0.6.0"]
                  [cljs-ajax "0.5.8"]
                  [net.mikera/imagez "0.12.0"]]
-
-  :plugins [[s3-wagon-private "1.2.0"]]
 
   :repl-options {:init-ns think.gate.core}
 
@@ -40,15 +38,4 @@
                   ["deploy"]
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
-                  ["vcs" "push"]]
-
-  :repositories  {"snapshots"  {:url "s3p://thinktopic.jars/snapshots/"
-                                :passphrase :env
-                                :username :env
-                                :releases false
-                                :sign-releases false}
-                  "releases"  {:url "s3p://thinktopic.jars/releases/"
-                               :passphrase :env
-                               :username :env
-                               :snapshots false
-                               :sign-releases false}})
+                  ["vcs" "push"]])

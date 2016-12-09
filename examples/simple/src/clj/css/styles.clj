@@ -2,4 +2,5 @@
   (:require [garden.units :refer [px]]))
 
 (def styles
-  [:body {:background :#aaf}])
+  [[:body {:background :#aff}]
+   [:div {:text-align "center"}]])
