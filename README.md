@@ -6,9 +6,11 @@ Gate is an opinionated library for hacking wepages into your clojure app.
 
 In your app's **project.clj**:
 
+[![Clojars Project](https://img.shields.io/clojars/v/thinktopic/think.gate.svg)](https://clojars.org/thinktopic/think.gate)
+
 ```
 ;; depend on
-[thinktopic/think.gate "0.1.0"]
+[thinktopic/think.gate "0.1.1"]
 
 ;; add
 :cljsbuild {:builds
