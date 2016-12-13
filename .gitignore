@@ -11,5 +11,6 @@ pom.xml.asc
 .hg/
 examples/simple/figwheel_server.log
 examples/simple/.nrepl-port
+examples/simple/.lein-repl-history
 examples/simple/target/
 examples/simple/resources/
