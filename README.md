@@ -10,7 +10,7 @@ In your app's **project.clj**:
 
 ```
 ;; depend on
-[thinktopic/think.gate "0.1.1"]
+[thinktopic/think.gate "0.1.2"]
 
 ;; add
 :cljsbuild {:builds
