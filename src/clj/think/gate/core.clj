@@ -87,10 +87,16 @@
 
 (defn css-update!
   []
-  (require 'css.styles :reload)
-  (let [css-file-path "resources/public/css/app.css"]
-    (io/make-parents css-file-path)
-    (spit css-file-path (apply garden/css @(resolve 'css.styles/styles)))))
+  (try
+    (require 'css.styles :reload)
+    (let [css-file-path "resources/public/css/app.css"]
+      (io/make-parents css-file-path)
+      (spit css-file-path (apply garden/css @(resolve 'css.styles/styles))))
+    (catch Throwable e
+      (println "=============================")
+      (println "Exception while updating css:")
+      (println " " (.getMessage e))
+      (println ""))))
 
 (defn start-css!
   [css-input-path]
