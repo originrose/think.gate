@@ -83,7 +83,7 @@ For **css**, create `src/clj/css/styles.clj`:
   (:require [garden.units :refer [px]]))
 
 (def styles
-  [:body {:background :green}])
+  [[:body {:background :green}]])
 ```
 
 And add to your **project.clj**:
