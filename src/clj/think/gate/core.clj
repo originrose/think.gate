@@ -67,14 +67,15 @@
 
 (defn main-handler
   [req routing-map variable-map]
-  (cond
-    (and (= (:uri req) "/")
-         (empty? (:params req))) (ok (hiccup/html5 (base-page variable-map)))
-    :else
-    (if-let [handler (get @routing-map (.substring (get req :uri) 1))]
-      (ok (handler (merge (get req :params)
-                          (parse-query-string (get req :query-string)))))
-      {:status 404})))
+  (let [^String uri (:uri req)]
+    (cond
+      (and (= uri "/")
+           (empty? (:params req))) (ok (hiccup/html5 (base-page variable-map)))
+      :else
+      (if-let [handler (get @routing-map (.substring uri 1))]
+        (ok (handler (merge (get req :params)
+                            (parse-query-string (get req :query-string)))))
+        {:status 404}))))
 
 (defn wrap-report-errors
   [handler]
