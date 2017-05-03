@@ -10,7 +10,12 @@
                  [garden "1.3.2"]
                  [reagent "0.6.1"]
                  [cljs-ajax "0.5.9"]
-                 [net.mikera/imagez "0.12.0"]]
+                 [net.mikera/imagez "0.12.0"]
+                 ;;Include bugfix
+                 [ring/ring-core "1.5.1"]
+                 [com.cognitect/transit-clj "0.8.300"]
+                 [com.cognitect/transit-java "0.8.327"]
+                 [cheshire "5.7.1"]]
 
   :repl-options {:init-ns think.gate.core}
 
