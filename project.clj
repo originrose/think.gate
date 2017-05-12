@@ -9,7 +9,7 @@
                  [ring-middleware-format "0.7.2"]
                  [garden "1.3.2"]
                  [reagent "0.6.1"]
-                 [cljs-ajax "0.5.9"]
+                 [cljs-ajax "0.6.0"]
                  [net.mikera/imagez "0.12.0"]
                  ;;Include bugfix
                  [ring/ring-core "1.5.1"]
