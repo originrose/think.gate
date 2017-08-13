@@ -1,7 +1,7 @@
 (defproject simple "0.1.0-SNAPSHOT"
   :description "Simplest possible example project using thinktopic/gate"
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [thinktopic/think.gate "0.1.3"]]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
+                 [thinktopic/think.gate "0.1.4-SNAPSHOT"]]
 
   :source-paths ["src/clj"]
 
