@@ -1,11 +1,12 @@
 (defproject thinktopic/think.gate "0.1.4-SNAPSHOT"
   :description "A library for hacking wepages into your clojure app."
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
                  [http-kit "2.2.0"]
                  [hiccup "1.0.5"]
                  [ns-tracker "0.3.1"]
-                 [figwheel-sidecar "0.5.10"]
+                 [figwheel-sidecar "0.5.12"]
+                 [org.clojure/clojurescript "1.9.854"]
                  [ring-middleware-format "0.7.2"]
                  [garden "1.3.2"]
                  [reagent "0.6.1"]
@@ -34,13 +35,4 @@
                 :compiler {:main "think.gate.core"
                            :asset-path "out"
                            :output-to "resources/public/js/app.js"
-                           :output-dir "resources/public/out"}}]}
-
-  :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "commit"]
-                  ["vcs" "tag" "" "--no-sign"] ;; disable signing
-                  ["deploy"]
-                  ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]
-                  ["vcs" "push"]])
+                           :output-dir "resources/public/out"}}]})
