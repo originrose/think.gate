@@ -35,13 +35,4 @@
                 :compiler {:main "think.gate.core"
                            :asset-path "out"
                            :output-to "resources/public/js/app.js"
-                           :output-dir "resources/public/out"}}]}
-
-  :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "commit"]
-                  ["vcs" "tag" "" "--no-sign"] ;; disable signing
-                  ["deploy"]
-                  ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]
-                  ["vcs" "push"]])
+                           :output-dir "resources/public/out"}}]})

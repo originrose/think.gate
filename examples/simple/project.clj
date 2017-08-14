@@ -18,4 +18,8 @@
 
   :main ^:skip-aot simple.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}}
+  :clean-targets ^{:protect false} ["resources/public/css/app.css"
+                                    "resources/public/js/app.js"
+                                    "resources/public/out"
+                                    "figwheel_server.log"])
